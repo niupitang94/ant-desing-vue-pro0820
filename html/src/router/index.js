@@ -10,6 +10,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/user",
+    hideInMenu: true,
     component: () =>
       import(/* webpackChunkName: "Layout" */ "../layouts/UserLayout.vue"),
     children: [
@@ -46,11 +47,13 @@ const routes = [
       {
         path: "/dashboard",
         name: "dashboard",
+        meta: { icon: "dashboard", title: "仪表盘"},
         component: { render: (h) => h("router-view") },
         children: [
           {
             path: "/dashboard/analysis",
             name: "analysis",
+            meta: { title: "分析页" },
             component: () =>
               import(
                 /* webpackChunkName: "dashboard" */ "../views/Dashboard/Analysis"
@@ -62,28 +65,32 @@ const routes = [
       {
         path: "/form",
         name: "form",
+        meta: { icon: "form", title: "表单" },
         component: { render: (h) => h("router-view") },
         children: [
           {
             path: "/form/basic-form",
             name: "basicform",
+            meta: { title: "基础表单" },
             component: () =>
               import(/* webpackChunkName: "form" */ "../views/Forms/BasicForm")
           },
           {
-            path: "form/step-form",
+            path: "/form/step-form",
             name: "stepform",
+            hideChildrenInMenu: true,
+            meta: { title: "分布表单" },
             component: () =>
               import(
                 /* webpackChunkName: "form" */ "../views/Forms/StepForm/Index.vue"
               ),
             children: [
               {
-                path: "form/step-form",
-                redirect: "form/step-form/info"
+                path: "/form/step-form",
+                redirect: "/form/step-form/info"
               },
               {
-                path: "form/step-form/info",
+                path: "/form/step-form/info",
                 name: "info",
                 component: () =>
                   import(
@@ -99,7 +106,7 @@ const routes = [
                   )
               },
               {
-                path: "form/step-form/result",
+                path: "/form/step-form/result",
                 name: "result",
                 component: () =>
                   import(
@@ -113,6 +120,7 @@ const routes = [
       {
         path: "*",
         name: "notfind",
+        hideInMenu: true,
         component: NotFind
       }
     ]
