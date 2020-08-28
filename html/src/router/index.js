@@ -1,8 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import findLast from "lodash/findLast";
+import { notification } from "ant-design-vue";
 import Nprogress from "nprogress";
 import "nprogress/nprogress.css";
 import NotFind from "../views/404.vue";
+import Forbidden from "../views/403.vue";
+import { check, isLogin } from "../utils/auth";
 // import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
@@ -36,6 +40,7 @@ const routes = [
   },
   {
     path: "/",
+    meta: { authority: ["user", "admin"] },
     component: () =>
       import(/* webpackChunkName: "layerout" */ "../layouts/BasicLayout"),
     children: [
@@ -47,7 +52,7 @@ const routes = [
       {
         path: "/dashboard",
         name: "dashboard",
-        meta: { icon: "dashboard", title: "仪表盘"},
+        meta: { icon: "dashboard", title: "仪表盘" },
         component: { render: (h) => h("router-view") },
         children: [
           {
@@ -65,7 +70,7 @@ const routes = [
       {
         path: "/form",
         name: "form",
-        meta: { icon: "form", title: "表单" },
+        meta: { icon: "form", title: "表单", authority: ["admin"] },
         component: { render: (h) => h("router-view") },
         children: [
           {
@@ -118,6 +123,12 @@ const routes = [
         ]
       },
       {
+        path: "/403",
+        name: "403",
+        hideInMenu: true,
+        component: Forbidden
+      },
+      {
         path: "*",
         name: "notfind",
         hideInMenu: true,
@@ -134,9 +145,25 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(from);
   if (to.path !== from.path) {
     Nprogress.start();
+  }
+  const record = findLast(to.matched, (record) => record.meta.authority);
+  if (record && !check(record.meta.authority)) {
+    if (!isLogin() && to.path !== "/user/login") {
+      next({
+        path: "/user/login"
+      });
+    } else if (to.path !== "/403") {
+      notification.error({
+        message: "403",
+        description: "你没有权限访问，请联系管理员"
+      });
+      next({
+        path: "/403"
+      });
+    }
+    Nprogress.done();
   }
   next();
 });
