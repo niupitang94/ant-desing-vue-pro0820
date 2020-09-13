@@ -1,6 +1,7 @@
 <template>
-  <div>
-    404页面
+  <div style="text-align: center">
+    <IconFont type="icon-404" style="font-size: 100px" />
+    <p>404</p>
   </div>
 </template>
 <script>
