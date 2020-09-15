@@ -12,7 +12,9 @@ import {
   Input,
   Menu,
   Form,
-  Select
+  Select,
+  Dropdown,
+  DatePicker
 } from "ant-design-vue";
 import Authorized from "./components/Authorized.vue";
 import Auth from "./directives/auth";
@@ -31,6 +33,8 @@ Vue.component("Authorized", Authorized);
 Vue.use(Auth);
 Vue.use(Form);
 Vue.use(Select);
+Vue.use(Dropdown);
+Vue.use(DatePicker);
 
 const IconFont = Icon.createFromIconfontCN({
   scriptUrl: "//at.alicdn.com/t/font_2053858_a09ltml9xk8.js" // 在 iconfont.cn 上生成
